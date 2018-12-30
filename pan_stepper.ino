@@ -107,16 +107,24 @@ void calcular_passos() {
 void draw_time() {
   display.clearDisplay();
   display.setTextSize(1);
-  display.setTextColor(WHITE);
+//  display.setTextColor(WHITE);
   display.setCursor(0,0);
-  display.println("TIME - Angle - Mode");
+  display.setTextColor(BLACK, WHITE); // 'inverted' text
+  display.print("Time");
+  display.setTextColor(WHITE);
+  display.println("   Angle   Mode");
   display.setTextSize(2);
-  display.setCursor(0,12);
+  display.setCursor(0,10);
   if (tempo < 300) {
     display.println(String(int(tempo)) + " seconds");
+  } else if (tempo >= 6000){
+    display.println(String(int(tempo / 60)) + " mins");
   } else {
     display.println(String(int(tempo / 60)) + " minutes");
   }
+  display.setTextSize(1);
+  display.setCursor(0,25);
+  display.println(String(delay_entre_steps) + "ms " + String(1000.0/delay_entre_steps) + "fps");
   display.display();
 }
 void draw_angle() {
@@ -124,10 +132,17 @@ void draw_angle() {
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0,0);
-  display.println("Time - ANGLE - Mode");
+  display.print("Time   ");
+  display.setTextColor(BLACK, WHITE); // 'inverted' text
+  display.print("Angle");
+  display.setTextColor(WHITE);
+  display.println("   Mode");
   display.setTextSize(2);
-  display.setCursor(0,12);
+  display.setCursor(0,10);
   display.println(int(angulo));
+  display.setTextSize(1);
+  display.setCursor(0,25);
+  display.println(String(delay_entre_steps) + "ms " + String(1000.0/delay_entre_steps) + "fps");
   display.display();
 }
 void draw_mode() {
@@ -135,9 +150,12 @@ void draw_mode() {
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0,0);
-  display.println("Time - Angle - MODE");
+  display.print("Time   Angle   ");
+  display.setTextColor(BLACK, WHITE); // 'inverted' text
+  display.println("Mode");
+  display.setTextColor(WHITE);
   display.setTextSize(2);
-  display.setCursor(0,12);
+  display.setCursor(0,10);
   String sentido_text;
   if (sentido == 1) {
     sentido_text = "CCW";
@@ -153,12 +171,15 @@ void draw_mode() {
   else if (mode == 2) {
     display.println("Sweep " + sentido_text);  
   }
+  display.setTextSize(1);
+  display.setCursor(0,25);
+  display.println(String(delay_entre_steps) + "ms " + String(1000.0/delay_entre_steps) + "fps");
   display.display();
 }
 void draw_running() {
   display.clearDisplay();
   display.setTextSize(1);
-  display.setTextColor(WHITE);
+  display.setTextColor(BLACK, WHITE); // 'inverted' text
   display.setCursor(0,0);
   String mode_text;
   String time_text;
@@ -182,10 +203,22 @@ void draw_running() {
   } else {
     sentido_text = "CW";
   }
-  display.println(String(time_text + " - " + String(int(angulo))) + "< - " + mode_text + " " + sentido_text);
+  display.print(time_text);
+  display.setTextColor(WHITE);
+  display.print(" ");
+  display.setTextColor(BLACK, WHITE); // 'inverted' text
+  display.print(String(int(angulo)) + "<");
+  display.setTextColor(WHITE);
+  display.print(" ");
+  display.setTextColor(BLACK, WHITE); // 'inverted' text
+  display.print(mode_text + " " + sentido_text);
+  display.setTextColor(WHITE);
   display.setTextSize(2);
-  display.setCursor(0,12);
+  display.setCursor(0,10);
   display.println("MOVING " + String(int(contador_de_steps / total_de_steps * 100)) + "%");
+  display.setTextSize(1);
+  display.setCursor(0,25);
+  display.println(String(delay_entre_steps) + "ms " + String(1000.0/delay_entre_steps) + "fps");
   display.display();
 }
 void loop() {
