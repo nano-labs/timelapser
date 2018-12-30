@@ -57,14 +57,14 @@ const int b_direita_pin = 7;
 const int b_modo_pin = 4;
 const int b_start_pin = 2;
 
-double angulo = 90; // em graus
-double tempo = 30; // em segundos
+double angulo = 180; // em graus
+double tempo = 300; // em segundos
 int sentido = -1; // 1 == CCW; -1 == CW
-int mode = 2; // 0 = movimento continuo; 1 = parar ao fim do movimento; 2 = vai e volta
+int mode = 0; // 0 = movimento continuo; 1 = parar ao fim do movimento; 2 = vai e volta
 bool parado = true;
 
-double total_de_steps = double(angulo / 360.0) * steps_por_volta; // total de steps
-double delay_entre_steps = (tempo / total_de_steps) * 1000.0;
+double total_de_steps = 0;//angulo / 360.0 * steps_por_volta; // total de steps
+double delay_entre_steps = 0;//(tempo / total_de_steps) * 1000.0;
 //double delay_entre_steps = 10.0;
 int contador_de_steps = 0;
 
@@ -83,12 +83,13 @@ void setup() {
   Serial.begin(9600);
   Serial.println(String(total_de_steps));
   Serial.println(delay_entre_steps);
-  small_stepper.setSpeed(500);
+  small_stepper.setSpeed(1000);
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 128x32)
   display.clearDisplay();
   display.drawBitmap(0, 0, ca_logo, 128, 32, WHITE);
   display.display();
   delay(1000);
+  calcular_passos();
   draw_time();
 
   pinMode(b_esquerda_pin, INPUT);
@@ -99,6 +100,10 @@ void setup() {
 //  attachInterrupt(digitalPinToInterrupt(b_start_pin), start_stop, CHANGE);
 }
 
+void calcular_passos() {
+  total_de_steps = angulo / 360.0 * steps_por_volta; // total de steps
+  delay_entre_steps = (tempo / total_de_steps) * 1000.0;
+}
 void draw_time() {
   display.clearDisplay();
   display.setTextSize(1);
@@ -187,9 +192,8 @@ void loop() {
   if (parado == false) {
     if (proximo_passo <= millis()) {
       small_stepper.step(sentido);
-      Serial.println(contador_de_steps);
       contador_de_steps++;
-      proximo_passo = millis() + delay_entre_steps;
+      proximo_passo = millis() + delay_entre_steps - 20; // 20 miliseconds to run one loop iteraction
       draw_running();
     }
   }
@@ -246,6 +250,7 @@ void loop() {
       if (tempo < 30) {
         tempo = 30;
       }
+      calcular_passos();
       draw_time();
     }
     else if (tela_modo == 1) { // angulo
@@ -253,6 +258,7 @@ void loop() {
       if (angulo < 45) {
         angulo = 45.0;
       }
+      calcular_passos();
       draw_angle();
     }
     else if (tela_modo == 2) { // modo
@@ -275,6 +281,7 @@ void loop() {
       } else {
         tempo = tempo + 300;
       }
+      calcular_passos();
       draw_time();
     }
     else if (tela_modo == 1) { // angulo
@@ -282,6 +289,7 @@ void loop() {
       if (angulo > 360) {
         angulo = 360.0;
       }
+      calcular_passos();
       draw_angle();
     }
     else if (tela_modo == 2) { // modo
@@ -317,6 +325,10 @@ void loop() {
     if (parado == true) {
       parado = false;
       draw_running();
+      calcular_passos();
+      Serial.println(angulo);
+      Serial.println(tempo);
+      Serial.println(delay_entre_steps);
     } else {
       parado = true;
       contador_de_steps = 0;
