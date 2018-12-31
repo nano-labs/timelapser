@@ -272,6 +272,11 @@ void loop() {
       b_start_pushed = 1;
     }
   }
+
+  if (b_esquerda_pushed == 1 || b_direita_pushed == 1 || b_modo_pushed == 1 || b_start_pushed == 1) {
+    delay(200);
+  }
+  
   if (b_esquerda_pushed == 1) {
     Serial.println("esquerda");
     if (tela_modo == 0) { // tempo
