@@ -8,6 +8,7 @@
 #define STEPS_PER_MOTOR_REVOLUTION 32   
 
 #define OLED_RESET 4
+
 Adafruit_SSD1306 display(OLED_RESET);
 
 static const unsigned char PROGMEM ca_logo[128 * 32 / 8] =
@@ -50,12 +51,12 @@ B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00000000, B00
 
 // Declare 'small_stepper' variable
 Stepper small_stepper(STEPS_PER_MOTOR_REVOLUTION, 8, 10, 9, 11);
-int steps_por_volta = 2048; // 32 steps por volta * 64 da caixa de reducao
+int steps_por_volta = 6144; // 32 steps por volta * 64 da caixa de reducao * 3 da polia
 
-const int b_esquerda_pin = 12;
-const int b_direita_pin = 7;
-const int b_modo_pin = 4;
-const int b_start_pin = 2;
+const int b_esquerda_pin = 2;
+const int b_direita_pin = 4;
+const int b_modo_pin = 7;
+const int b_start_pin = 12;
 
 double angulo = 180; // em graus
 double tempo = 300; // em segundos
